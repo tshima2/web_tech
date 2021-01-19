@@ -33,7 +33,7 @@
       <input type="submit" name="送信" >
     </form>
 
-    <% result = connection.exec("SELECT date, give_for, length, weight, quality FROM crops WHERE give_for <> '自家消費' ORDER BY date DESC, length DESC, weight DESC, quality ASC;") %>
+    <% result = connection.exec("SELECT date, give_for, length, weight, (CASE WHEN quality THEN 'GOOD' ELSE 'NORMAL' END) AS quality FROM crops WHERE give_for <> '自家消費' ORDER BY date DESC, length DESC, weight DESC, quality ASC;") %>
     <% data2 = [] %>
     <% result.each do |record| %>
       <%  data2 << "#{record["date"]} #{record["give_for"]} #{record["length"]} #{record["weight"]} #{record["quality"]}" %>
@@ -48,12 +48,11 @@
       <input type="submit" name="送信" >
     </form>
 
-    <% result = connection.exec("SELECT date, give_for, length, weight, quality FROM crops WHERE quality = false ORDER BY date DESC, give_for DESC, length DESC, weight DESC;") %>
+    <% result = connection.exec("SELECT date, give_for, length, weight, (CASE WHEN quality THEN 'GOOD' ELSE 'NORMAL' END) AS quality  FROM crops WHERE quality = false ORDER BY date DESC, give_for DESC, length DESC, weight DESC;") %>
     <% data3 = [] %>
     <% result.each do |record| %>
       <%  data3 << "#{record["date"]} #{record["give_for"]} #{record["length"]} #{record["weight"]} #{record["quality"]}" %>
     <% end %>
-    
     
     <form action="quality.cgi" method="POST">
       下記のボタンを押すと、品質が悪いもの（false）のgoyaの情報を載せたページに飛びます<br><br>
@@ -63,6 +62,5 @@
       <input type="submit" name="送信" >
     </form>
 
-    
   </body>
 </html>
